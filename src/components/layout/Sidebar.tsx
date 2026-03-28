@@ -1,0 +1,161 @@
+import { Link, useLocation } from "wouter";
+import { cn } from "@/lib/utils";
+import {
+  BookOpen, Terminal, HardDrive, Shield, Settings,
+  FileText, Users, Network, Cpu, Clock, History,
+  X, Code, FolderOpen, Key, Wrench, ChevronRight,
+  ArrowRight, Filter, ToggleLeft, AlertTriangle, Server
+} from "lucide-react";
+
+const NAVIGATION = [
+  {
+    title: "Introdução",
+    items: [
+      { path: "/", label: "Início", icon: BookOpen },
+      { path: "/historia", label: "O que é o CMD", icon: History },
+      { path: "/primeiros-passos", label: "Primeiros Passos", icon: Terminal },
+    ]
+  },
+  {
+    title: "Fundamentos",
+    items: [
+      { path: "/ajuda", label: "Obtendo Ajuda", icon: BookOpen },
+      { path: "/variaveis", label: "Variáveis de Ambiente", icon: Code },
+      { path: "/operadores", label: "Operadores e Lógica", icon: ToggleLeft },
+      { path: "/caracteres", label: "Caracteres Especiais", icon: Code },
+    ]
+  },
+  {
+    title: "Sistema de Arquivos",
+    items: [
+      { path: "/navegacao", label: "Navegação", icon: FolderOpen },
+      { path: "/arquivos", label: "Manipulação de Arquivos", icon: FileText },
+      { path: "/conteudo", label: "Conteúdo de Arquivos", icon: FileText },
+      { path: "/atributos", label: "Atributos e Permissões", icon: Shield },
+    ]
+  },
+  {
+    title: "Entrada e Saída",
+    items: [
+      { path: "/redirecionamento", label: "Redirecionamento", icon: ArrowRight },
+      { path: "/filtros", label: "Filtros de Texto", icon: Filter },
+    ]
+  },
+  {
+    title: "Scripting Batch",
+    items: [
+      { path: "/scripts", label: "Scripts .bat/.cmd", icon: Terminal },
+      { path: "/fluxo-controle", label: "Controle de Fluxo", icon: Code },
+      { path: "/loops", label: "Loops (FOR)", icon: Code },
+      { path: "/strings", label: "Strings e Matemática", icon: FileText },
+      { path: "/funcoes", label: "Funções e Sub-rotinas", icon: Code },
+      { path: "/erros", label: "Tratamento de Erros", icon: AlertTriangle },
+    ]
+  },
+  {
+    title: "Administração do Sistema",
+    items: [
+      { path: "/processos", label: "Processos", icon: Cpu },
+      { path: "/servicos", label: "Serviços", icon: Server },
+      { path: "/usuarios", label: "Usuários e Grupos", icon: Users },
+      { path: "/agendamento", label: "Agendamento de Tarefas", icon: Clock },
+      { path: "/permissoes", label: "Permissões (icacls)", icon: Shield },
+    ]
+  },
+  {
+    title: "Rede",
+    items: [
+      { path: "/rede", label: "Rede e Diagnóstico", icon: Network },
+    ]
+  },
+  {
+    title: "Windows Avançado",
+    items: [
+      { path: "/registro", label: "Registro do Windows", icon: Key },
+      { path: "/wmic", label: "WMIC e Automação", icon: HardDrive },
+    ]
+  },
+  {
+    title: "Extras",
+    items: [
+      { path: "/dicas", label: "Dicas e Truques", icon: Wrench },
+      { path: "/referencias", label: "Referências", icon: BookOpen },
+    ]
+  }
+];
+
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (v: boolean) => void;
+}
+
+export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+  const [location] = useLocation();
+
+  return (
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      <aside className={cn(
+        "fixed top-0 bottom-0 left-0 z-50 w-72 bg-card border-r border-border transition-transform duration-300 ease-in-out lg:translate-x-0 overflow-y-auto",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="p-6">
+          <div className="flex items-center justify-between lg:justify-center mb-8">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Terminal className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold mt-0 mb-0 pb-0 border-0 leading-tight">CMD</h2>
+                <p className="text-xs text-muted-foreground">Guia Completo</p>
+              </div>
+            </Link>
+            <button className="lg:hidden p-2 text-muted-foreground hover:text-foreground" onClick={() => setIsOpen(false)}>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <nav className="space-y-8">
+            {NAVIGATION.map((section, idx) => (
+              <div key={idx}>
+                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-3 mt-0 border-0 pb-0">
+                  {section.title}
+                </h4>
+                <ul className="space-y-1">
+                  {section.items.map((item, i) => {
+                    const isActive = location === item.path;
+                    const Icon = item.icon;
+                    return (
+                      <li key={i}>
+                        <Link
+                          href={item.path}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                            isActive
+                              ? "bg-primary/10 text-primary font-medium"
+                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                          )}
+                        >
+                          <Icon className={cn("w-4 h-4", isActive ? "text-primary" : "opacity-70")} />
+                          {item.label}
+                          {isActive && <ChevronRight className="w-3 h-3 ml-auto text-primary" />}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </>
+  );
+}
