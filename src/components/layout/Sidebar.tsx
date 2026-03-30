@@ -4,7 +4,11 @@ import {
   BookOpen, Terminal, HardDrive, Shield, Settings,
   FileText, Users, Network, Cpu, Clock, History,
   X, Code, FolderOpen, Key, Wrench, ChevronRight,
-  ArrowRight, Filter, ToggleLeft, AlertTriangle, Server
+  ArrowRight, Filter, ToggleLeft, AlertTriangle, Server,
+  Download, Globe, Lock, Activity, Database, Search,
+  Layers, Package, Bug, Palette, Monitor, RefreshCcw,
+  Building, Copy, Printer, Clipboard, Upload, Power,
+  BarChart2, Calendar
 } from "lucide-react";
 
 const NAVIGATION = [
@@ -14,6 +18,7 @@ const NAVIGATION = [
       { path: "/", label: "Início", icon: BookOpen },
       { path: "/historia", label: "O que é o CMD", icon: History },
       { path: "/primeiros-passos", label: "Primeiros Passos", icon: Terminal },
+      { path: "/ref-rapida", label: "Referência Rápida", icon: Search },
     ]
   },
   {
@@ -23,6 +28,10 @@ const NAVIGATION = [
       { path: "/variaveis", label: "Variáveis de Ambiente", icon: Code },
       { path: "/operadores", label: "Operadores e Lógica", icon: ToggleLeft },
       { path: "/caracteres", label: "Caracteres Especiais", icon: Code },
+      { path: "/ambiente-path", label: "PATH Avançado", icon: Settings },
+      { path: "/data-hora", label: "Data e Hora", icon: Calendar },
+      { path: "/codificacao", label: "Codificação e Unicode", icon: Globe },
+      { path: "/cor-formatacao", label: "Cores e Formatação", icon: Palette },
     ]
   },
   {
@@ -32,6 +41,8 @@ const NAVIGATION = [
       { path: "/arquivos", label: "Manipulação de Arquivos", icon: FileText },
       { path: "/conteudo", label: "Conteúdo de Arquivos", icon: FileText },
       { path: "/atributos", label: "Atributos e Permissões", icon: Shield },
+      { path: "/links-simbolicos", label: "Links Simbólicos", icon: Layers },
+      { path: "/robocopy", label: "ROBOCOPY Avançado", icon: Copy },
     ]
   },
   {
@@ -39,6 +50,7 @@ const NAVIGATION = [
     items: [
       { path: "/redirecionamento", label: "Redirecionamento", icon: ArrowRight },
       { path: "/filtros", label: "Filtros de Texto", icon: Filter },
+      { path: "/clipboard", label: "Clipboard e GUI", icon: Clipboard },
     ]
   },
   {
@@ -50,6 +62,9 @@ const NAVIGATION = [
       { path: "/strings", label: "Strings e Matemática", icon: FileText },
       { path: "/funcoes", label: "Funções e Sub-rotinas", icon: Code },
       { path: "/erros", label: "Tratamento de Erros", icon: AlertTriangle },
+      { path: "/scripting-avancado", label: "Scripting Avançado", icon: Code },
+      { path: "/depuracao", label: "Depuração de Scripts", icon: Bug },
+      { path: "/producao-scripts", label: "Scripts para Produção", icon: Shield },
     ]
   },
   {
@@ -58,21 +73,69 @@ const NAVIGATION = [
       { path: "/processos", label: "Processos", icon: Cpu },
       { path: "/servicos", label: "Serviços", icon: Server },
       { path: "/usuarios", label: "Usuários e Grupos", icon: Users },
-      { path: "/agendamento", label: "Agendamento de Tarefas", icon: Clock },
+      { path: "/agendamento", label: "Agendamento Básico", icon: Clock },
+      { path: "/tarefas-agendadas", label: "Tarefas Agendadas Avançado", icon: Calendar },
       { path: "/permissoes", label: "Permissões (icacls)", icon: Shield },
+      { path: "/active-directory", label: "Active Directory", icon: Building },
+      { path: "/grupos-politicas", label: "Políticas de Grupo", icon: Settings },
+      { path: "/windows-update", label: "Windows Update", icon: RefreshCcw },
+      { path: "/sistema-info", label: "Informações do Sistema", icon: Monitor },
     ]
   },
   {
     title: "Rede",
     items: [
       { path: "/rede", label: "Rede e Diagnóstico", icon: Network },
+      { path: "/rede-avancada", label: "Rede Avançada (NETSH)", icon: Network },
+      { path: "/compartilhamento-rede", label: "Compartilhamento de Rede", icon: Globe },
+      { path: "/network-diag", label: "Diagnóstico Completo", icon: Activity },
+      { path: "/ftp-transferencia", label: "FTP, SSH e BITS", icon: Upload },
+    ]
+  },
+  {
+    title: "Disco e Armazenamento",
+    items: [
+      { path: "/disco", label: "DISKPART, CHKDSK, FORMAT", icon: HardDrive },
+      { path: "/sfc-dism", label: "SFC e DISM", icon: Wrench },
+      { path: "/boot-recuperacao", label: "Boot e Recuperação", icon: Power },
+    ]
+  },
+  {
+    title: "Segurança",
+    items: [
+      { path: "/firewall", label: "Firewall e Segurança", icon: Shield },
+      { path: "/certificados", label: "Certificados (CERTUTIL)", icon: Lock },
+      { path: "/registro", label: "Registro do Windows", icon: Key },
     ]
   },
   {
     title: "Windows Avançado",
     items: [
-      { path: "/registro", label: "Registro do Windows", icon: Key },
-      { path: "/wmic", label: "WMIC e Automação", icon: HardDrive },
+      { path: "/wmic", label: "WMIC Básico", icon: HardDrive },
+      { path: "/wmic-avancado", label: "WMIC Avançado", icon: Database },
+      { path: "/eventos-logs", label: "Eventos e Logs", icon: FileText },
+      { path: "/desempenho", label: "Monitoramento de Desempenho", icon: BarChart2 },
+      { path: "/drivers", label: "Drivers (PNPUTIL)", icon: Cpu },
+      { path: "/impressao", label: "Impressão", icon: Printer },
+    ]
+  },
+  {
+    title: "Programas e Pacotes",
+    items: [
+      { path: "/winget", label: "WINGET e Instaladores", icon: Package },
+    ]
+  },
+  {
+    title: "Virtualização e Linux",
+    items: [
+      { path: "/wsl", label: "WSL — Linux no Windows", icon: Terminal },
+      { path: "/hyper-v", label: "Hyper-V", icon: Server },
+    ]
+  },
+  {
+    title: "Transição para PowerShell",
+    items: [
+      { path: "/powershell-intro", label: "CMD → PowerShell", icon: Code },
     ]
   },
   {
