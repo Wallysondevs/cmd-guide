@@ -98,13 +98,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   wsl grep -rn "TODO" /mnt/c/Users/Joao/Projetos/
 
   :: Processar CSV com awk
-  wsl awk -F, "NR>1 {sum += \$3} END {print sum}" /mnt/c/dados.csv
+  wsl awk -F, "NR>1 {sum += \\$3} END {print sum}" /mnt/c/dados.csv
 
   :: Contar linhas em arquivo Windows
   wsl wc -l /mnt/c/logs/acesso.log
 
   :: Converter finais de linha CRLF para LF
-  wsl sed -i "s/\r$//" /mnt/c/Scripts/script.sh
+  wsl sed -i "s/\\r$//" /mnt/c/Scripts/script.sh
 
   :: Usar curl Linux (mais completo que o do Windows)
   wsl curl -s -o /dev/null -w "%{http_code}" https://meusite.com.br`} />
@@ -112,8 +112,8 @@ import { PageContainer } from "@/components/layout/PageContainer";
         <h3>Integração Windows ↔ Linux: Arquivos</h3>
         <CodeBlock language="batch" title="Acessar arquivos entre os dois sistemas" code={`:: No CMD: acessar o sistema de arquivos Linux
   :: O Windows monta o WSL em \\wsl$\\NomeDaDistro
-  dir \\wsl$\\Ubuntu-22.04\\home\\joao
-  copy \\wsl$\\Ubuntu-22.04\\home\\joao\\script.sh C:\\Scripts\\
+  dir \\wsl$\\\\Ubuntu-22.04\\home\\joao
+  copy \\wsl$\\\\Ubuntu-22.04\\home\\joao\\script.sh C:\\Scripts\\
 
   :: No bash WSL: acessar Windows (montado em /mnt/)
   wsl ls /mnt/c/Users/Joao/Documents
@@ -156,13 +156,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   netsh interface portproxy add v4tov4 listenport=80 listenaddress=0.0.0.0 connectport=80 connectaddress=%WSL_IP%`} />
 
         <h2><Settings className="inline-block mr-2 mb-1 w-5 h-5" /> Configurar o WSL (.wslconfig e wsl.conf)</h2>
-        <CodeBlock language="batch" title="Arquivo .wslconfig — limites de recursos" code={`:: Criar C:\Users\SEU_USUARIO\.wslconfig com as configurações:
+        <CodeBlock language="batch" title="Arquivo .wslconfig — limites de recursos" code={`:: Criar C:\\Users\\SEU_USUARIO\\.wslconfig com as configurações:
 
   :: [wsl2]
   :: memory=4GB              # Máximo de RAM que o WSL pode usar
   :: processors=4            # Máximo de CPUs virtuais
   :: swap=2GB                # Tamanho do arquivo de swap
-  :: swapFile=C:\Temp\wsl-swap.vhdx  # Local do arquivo de swap
+  :: swapFile=C:\\Temp\\wsl-swap.vhdx  # Local do arquivo de swap
   :: localhostForwarding=true         # Redireciona localhost automaticamente
   :: nestedVirtualization=true        # Habilita virtualização aninhada
   :: guiApplications=true             # Habilita WSLg (apps gráficos)
@@ -175,7 +175,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
     echo processors=4
     echo swap=2GB
     echo localhostForwarding=true
-  ) > "%USERPROFILE%\.wslconfig"
+  ) > "%USERPROFILE%\\.wslconfig"
 
   :: Reiniciar para aplicar
   wsl --shutdown`} />
@@ -205,17 +205,17 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h2><Layers className="inline-block mr-2 mb-1 w-5 h-5" /> Backup e Restauração de Distros</h2>
         <CodeBlock language="batch" title="Exportar e importar distribuições WSL" code={`:: Exportar distro como backup (comprimido .tar)
-  wsl --export Ubuntu-22.04 D:\Backup\ubuntu-backup.tar
+  wsl --export Ubuntu-22.04 D:\\Backup\\ubuntu-backup.tar
 
   :: Importar em qualquer pasta
-  wsl --import Ubuntu-Restaurado D:\WSL\Ubuntu D:\Backup\ubuntu-backup.tar
+  wsl --import Ubuntu-Restaurado D:\\WSL\\Ubuntu D:\\Backup\\ubuntu-backup.tar
 
   :: Clonar distro (criar cópia)
-  wsl --export Ubuntu-22.04 D:\Temp\ubuntu-clone.tar
-  wsl --import Ubuntu-Clone D:\WSL\Clone D:\Temp\ubuntu-clone.tar
+  wsl --export Ubuntu-22.04 D:\\Temp\\ubuntu-clone.tar
+  wsl --import Ubuntu-Clone D:\\WSL\\Clone D:\\Temp\\ubuntu-clone.tar
 
   :: Importar como WSL 2 (explícito)
-  wsl --import Debian-Novo D:\WSL\Debian D:\Backup\debian.tar --version 2
+  wsl --import Debian-Novo D:\\WSL\\Debian D:\\Backup\\debian.tar --version 2
 
   :: Listar após importar
   wsl -l -v`} />

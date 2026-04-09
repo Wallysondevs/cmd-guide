@@ -52,14 +52,14 @@ import { PageContainer } from "@/components/layout/PageContainer";
   set STAMP=%ANO%%MES%%DIA%_%HORA%%MIN%
 
   :: Usar em nome de arquivo
-  copy dados.csv "D:\Backup\dados_%STAMP%.csv"
+  copy dados.csv "D:\\Backup\\dados_%STAMP%.csv"
   :: Resultado: dados_20260409_1435.csv
 
   :: Criar pasta com data
-  mkdir "D:\Logs\%ANO%-%MES%-%DIA%"
+  mkdir "D:\\Logs\\%ANO%-%MES%-%DIA%"
 
   :: Redirecionar log com timestamp
-  echo [%DATE% %TIME%] Inicio do processo >> C:\Logs\processo.log`} />
+  echo [%DATE% %TIME%] Inicio do processo >> C:\\Logs\\processo.log`} />
 
         <h3>Método Robusto via PowerShell</h3>
         <CodeBlock language="batch" title="Timestamp confiável (independente do locale)" code={`:: Obter timestamp formatado via PowerShell (recomendado)
@@ -67,7 +67,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
   :: Usar o timestamp
   echo Arquivo criado em: %STAMP%
-  copy backup.zip "D:\Arquivos\backup_%STAMP%.zip"
+  copy backup.zip "D:\\Arquivos\\backup_%STAMP%.zip"
 
   :: Data só (sem hora)
   for /f %%d in ('powershell -Command "Get-Date -Format yyyy-MM-dd"') do set HOJE=%%d
@@ -108,7 +108,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   w32tm /resync /force
 
   :: Ver configuração de timezone via registro
-  reg query HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation`} />
+  reg query HKLM\\SYSTEM\\CurrentControlSet\\Control\\TimeZoneInformation`} />
 
         <h2><RefreshCcw className="inline-block mr-2 mb-1 w-5 h-5" /> W32TM — Sincronização de Horário NTP</h2>
         <p>O <code>W32TM</code> é o serviço de tempo do Windows. Gerencia a sincronização NTP com servidores de horário, essencial em domínios Active Directory e ambientes que precisam de logs precisos.</p>
@@ -177,9 +177,9 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
   :: Verificar se arquivo foi modificado nos últimos 7 dias
   powershell -Command "
-      \$arquivo = 'C:\dados.csv'
-      \$limite = (Get-Date).AddDays(-7)
-      if ((Get-Item \$arquivo).LastWriteTime -gt \$limite) {
+      \\$arquivo = 'C:\\dados.csv'
+      \\$limite = (Get-Date).AddDays(-7)
+      if ((Get-Item \\$arquivo).LastWriteTime -gt \\$limite) {
           Write-Host 'Arquivo recente'
       } else {
           Write-Host 'Arquivo desatualizado!'
@@ -190,7 +190,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   for /f %%d in ('powershell -Command "(Get-Date).DayOfWeek"') do set DIA=%%d
   if "%DIA%"=="Friday" (
       echo Realizando backup semanal...
-      robocopy C:\Dados D:\Backup\Semanal /e /mir
+      robocopy C:\\Dados D:\\Backup\\Semanal /e /mir
   )`} />
 
         <AlertBox type="info" title="NTP em Domínio Active Directory">

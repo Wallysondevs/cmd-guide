@@ -39,42 +39,42 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <CodeBlock language="batch" title="Hard Links e Junctions" code={`:: Criar hard link (dois nomes para o mesmo arquivo)
   :: Hard links só funcionam no mesmo volume
-  fsutil hardlink create C:\Atalhos\config-link.ini C:\App\config.ini
+  fsutil hardlink create C:\\Atalhos\\config-link.ini C:\\App\\config.ini
   :: Agora config-link.ini e config.ini apontam para o mesmo arquivo
 
   :: Listar hard links de um arquivo
-  fsutil hardlink list C:\App\config.ini
+  fsutil hardlink list C:\\App\\config.ini
 
   :: Criar junction (link de diretório - funciona entre volumes)
   :: Equivalente a um "atalho" de pasta no NTFS
-  mklink /j C:\DadosAntigos D:\MigraçãoDados
-  :: Ao acessar C:\DadosAntigos, você está vendo D:\MigraçãoDados
+  mklink /j C:\\DadosAntigos D:\\MigraçãoDados
+  :: Ao acessar C:\\DadosAntigos, você está vendo D:\\MigraçãoDados
 
   :: Criar link simbólico para arquivo
-  mklink C:\atalho-config.ini C:\App\config.ini
+  mklink C:\\atalho-config.ini C:\\App\\config.ini
 
   :: Criar link simbólico para pasta (requer admin ou modo desenvolvedor)
-  mklink /d C:\MinhaPasta D:\PastaReal
+  mklink /d C:\\MinhaPasta D:\\PastaReal
 
   :: Listar links simbólicos
-  dir /al C:\`} />
+  dir /al C:\\`} />
 
         <CodeBlock language="batch" title="Sparse Files e Arquivos Grandes" code={`:: Criar sparse file (arquivo grande que ocupa pouco espaço real em disco)
   :: Útil para reservar espaço ou criar discos virtuais
 
   :: Criar arquivo de 10GB que ocupa quase zero espaço
-  fsutil file createnew C:\Temp\arquivo-sparse.dat 10737418240
-  fsutil sparse setflag C:\Temp\arquivo-sparse.dat
+  fsutil file createnew C:\\Temp\\arquivo-sparse.dat 10737418240
+  fsutil sparse setflag C:\\Temp\\arquivo-sparse.dat
 
   :: Ver se arquivo é sparse
-  fsutil sparse queryflag C:\Temp\arquivo-sparse.dat
+  fsutil sparse queryflag C:\\Temp\\arquivo-sparse.dat
 
   :: Criar arquivo de tamanho fixo real (para benchmark de disco)
-  fsutil file createnew C:\Temp\teste-velocidade.dat 104857600
+  fsutil file createnew C:\\Temp\\teste-velocidade.dat 104857600
   :: Cria arquivo de 100MB (102400 * 1024)
 
   :: Definir tamanho de arquivo existente (truncar ou expandir)
-  fsutil file seteof C:\Temp\arquivo.dat 1073741824`} />
+  fsutil file seteof C:\\Temp\\arquivo.dat 1073741824`} />
 
         <h2><Archive className="inline-block mr-2 mb-1 w-5 h-5" /> COMPACT — Compressão NTFS</h2>
         <p>O <code>COMPACT</code> gerencia a compressão nativa do NTFS. Arquivos comprimidos são transparentes ao sistema — você os usa normalmente, mas ocupam menos espaço em disco. Ideal para arquivos de logs, documentos e textos.</p>
@@ -84,19 +84,19 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: [C] = Compressed, [U] = Uncompressed
 
   :: Comprimir um arquivo
-  compact /c C:\Logs\antigo.log
+  compact /c C:\\Logs\\antigo.log
 
   :: Comprimir pasta inteira (subpastas incluídas)
-  compact /c /s:C:\Logs\
+  compact /c /s:C:\\Logs\\
 
   :: Comprimir pasta e marcar para compressão de futuros arquivos
-  compact /c /s /i C:\Arquivos_Antigos\
+  compact /c /s /i C:\\Arquivos_Antigos\\
 
   :: Descomprimir arquivo
-  compact /u C:\Logs\antigo.log
+  compact /u C:\\Logs\\antigo.log
 
   :: Descomprimir pasta inteira
-  compact /u /s:C:\Logs\
+  compact /u /s:C:\\Logs\\
 
   :: Compactar Windows (CompactOS — Windows 10+)
   :: Reduz instalação do Windows sem perda de funcionalidade
@@ -109,8 +109,8 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h2><FolderOpen className="inline-block mr-2 mb-1 w-5 h-5" /> SUBST — Mapear Pastas como Drives</h2>
         <CodeBlock language="batch" title="Criar drives virtuais com SUBST" code={`:: Mapear pasta como drive virtual
-  subst Z: C:\Projetos\MeuProjeto\src
-  :: Agora Z: apontará para C:\Projetos\MeuProjeto\src
+  subst Z: C:\\Projetos\\MeuProjeto\\src
+  :: Agora Z: apontará para C:\\Projetos\\MeuProjeto\\src
 
   :: Verificar mapeamentos existentes
   subst
@@ -119,13 +119,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   subst Z: /d
 
   :: Exemplo prático: facilitar acesso a pasta profunda
-  subst X: "C:\Users\Joao\Documents\Trabalho\Projetos\2026\Q1\Relatórios"
+  subst X: "C:\\Users\\Joao\\Documents\\Trabalho\\Projetos\\2026\\Q1\\Relatórios"
   :: Agora basta digitar X: no CMD
 
   :: Nota: subst não persiste após reboot
   :: Para tornar permanente, adicione ao autoexec ou startup
   :: via schtasks para rodar ao login:
-  schtasks /create /tn "SubstX" /tr "subst X: C:\Projetos" /sc onlogon /ru %USERNAME% /f`} />
+  schtasks /create /tn "SubstX" /tr "subst X: C:\\Projetos" /sc onlogon /ru %USERNAME% /f`} />
 
         <h2><Search className="inline-block mr-2 mb-1 w-5 h-5" /> FSUTIL — Diagnóstico Avançado</h2>
         <CodeBlock language="batch" title="USN Journal e diagnóstico de volume" code={`:: Ver status do USN Journal (Change Journal)
@@ -165,9 +165,9 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
   :: Top 20 pastas maiores no C:
   powershell -Command "
-      Get-ChildItem 'C:\' -Recurse -ErrorAction SilentlyContinue | 
-      Where-Object { \$_.PSIsContainer } |
-      Sort-Object { (Get-ChildItem \$_.FullName -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum } -Descending |
+      Get-ChildItem 'C:\\' -Recurse -ErrorAction SilentlyContinue | 
+      Where-Object { \\$_.PSIsContainer } |
+      Sort-Object { (Get-ChildItem \\$_.FullName -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum } -Descending |
       Select-Object -First 20 FullName |
       Format-Table -AutoSize
   "

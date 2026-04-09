@@ -15,16 +15,16 @@ import { PageContainer } from "@/components/layout/PageContainer";
         <p>O CMD oferece o comando <code>PRINT</code> para enviar arquivos texto para a impressora, além de diversas ferramentas para gerenciar impressoras e filas de impressão.</p>
 
         <CodeBlock language="batch" title="Imprimir arquivos de texto" code={`:: Imprimir arquivo de texto na impressora padrão
-  print C:\Documentos\relatorio.txt
+  print C:\\Documentos\\relatorio.txt
 
   :: Imprimir em impressora específica
-  print /D:"Nome da Impressora" C:\Documentos\relatorio.txt
+  print /D:"Nome da Impressora" C:\\Documentos\\relatorio.txt
 
   :: Imprimir em porta LPT
-  print /D:LPT1 C:\Documentos\relatorio.txt
+  print /D:LPT1 C:\\Documentos\\relatorio.txt
 
   :: Imprimir em impressora de rede (porta UNC)
-  print /D:\\SERVIDOR\Impressora C:\relatorio.txt
+  print /D:\\SERVIDOR\\Impressora C:\\relatorio.txt
 
   :: Listar impressoras instaladas
   wmic printer get Name, Default, WorkOffline, PortName, Status
@@ -57,22 +57,22 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h2><Network className="inline-block mr-2 mb-1 w-5 h-5" /> Impressoras de Rede</h2>
         <CodeBlock language="batch" title="Adicionar e gerenciar impressoras de rede" code={`:: Adicionar impressora de rede compartilhada
-  rundll32 printui.dll,PrintUIEntry /in /n "\\SERVIDOR\Impressora"
+  rundll32 printui.dll,PrintUIEntry /in /n "\\SERVIDOR\\Impressora"
 
   :: Adicionar e tornar padrão
-  rundll32 printui.dll,PrintUIEntry /in /n "\\SERVIDOR\Impressora" /y
+  rundll32 printui.dll,PrintUIEntry /in /n "\\SERVIDOR\\Impressora" /y
 
   :: Remover impressora de rede
-  rundll32 printui.dll,PrintUIEntry /dn /n "\\SERVIDOR\Impressora"
+  rundll32 printui.dll,PrintUIEntry /dn /n "\\SERVIDOR\\Impressora"
 
   :: Instalar impressora com driver específico
-  rundll32 printui.dll,PrintUIEntry /if /b "Minha Impressora" /f "C:\Drivers\impressora.inf" /r "LPT1:" /m "HP LaserJet 1022"
+  rundll32 printui.dll,PrintUIEntry /if /b "Minha Impressora" /f "C:\\Drivers\\impressora.inf" /r "LPT1:" /m "HP LaserJet 1022"
 
   :: Listar impressoras compartilhadas em um servidor
   net view \\SERVIDOR-PRINT
 
   :: Mapear impressora de rede via NET USE
-  net use LPT2 \\SERVIDOR\Impressora /persistent:yes
+  net use LPT2 \\SERVIDOR\\Impressora /persistent:yes
 
   :: Listar mapeamentos
   net use | findstr LPT
@@ -99,11 +99,11 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: Limpar fila de impressão manualmente
   :: (Spooler precisa estar PARADO)
   net stop Spooler
-  del /f /q C:\Windows\System32\spool\PRINTERS\*.*
+  del /f /q C:\\Windows\\System32\\spool\\PRINTERS\\*.*
   net start Spooler
 
   :: Ver arquivos na fila de spool
-  dir /b C:\Windows\System32\spool\PRINTERS\
+  dir /b C:\\Windows\\System32\\spool\\PRINTERS\\
 
   :: Configurar spooler para iniciar automaticamente
   sc config Spooler start= auto`} />
@@ -121,7 +121,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
   :: Deletar todos os trabalhos da fila
   echo Removendo trabalhos na fila...
-  del /f /q "%SystemRoot%\System32\spool\PRINTERS\*.*" >nul 2>&1
+  del /f /q "%SystemRoot%\\System32\\spool\\PRINTERS\\*.*" >nul 2>&1
 
   :: Reiniciar o spooler
   echo Iniciando spooler...
@@ -141,10 +141,10 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: Porta 631  = IPP (Internet Printing Protocol)
 
   :: Listar portas de impressão configuradas
-  reg query "HKLM\SYSTEM\CurrentControlSet\Control\Print\Monitors\Standard TCP/IP Port\Ports"
+  reg query "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\Standard TCP/IP Port\\Ports"
 
   :: Ver log de instalação de driver de impressora
-  type C:\Windows\inf\setupapi.dev.log | findstr /i "printer"
+  type C:\\Windows\\inf\\setupapi.dev.log | findstr /i "printer"
 
   :: Verificar se driver está assinado
   powershell -Command "Get-PrinterDriver | Select-Object Name, DriverVersion, Manufacturer"

@@ -64,7 +64,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h2><Battery className="inline-block mr-2 mb-1 w-5 h-5" /> Relatório de Bateria</h2>
         <CodeBlock language="batch" title="Gerar relatório detalhado de bateria" code={`:: Gerar relatório de bateria em HTML (válido apenas em notebooks)
-  powercfg /batteryreport /output C:\Relatorios\bateria.html
+  powercfg /batteryreport /output C:\\Relatorios\\bateria.html
   :: O relatório inclui:
   :: - Histórico de cargas dos últimos 3 dias
   :: - Capacidade atual vs capacidade original (design capacity)
@@ -72,13 +72,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: - Eventos de energia (conectado/desconectado)
 
   :: Abrir o relatório automaticamente
-  start C:\Relatorios\bateria.html
+  start C:\\Relatorios\\bateria.html
 
   :: Ver status da bateria diretamente
   powercfg /systembatteryreport
 
   :: Gerar relatório de energia (diagnóstico completo, 60s)
-  powercfg /energy /output C:\Relatorios\energia.html
+  powercfg /energy /output C:\\Relatorios\\energia.html
   :: Analisa: erros de eficiência energética, dispositivos que impedem sleep, timeouts configurados`} />
 
         <h2><Settings className="inline-block mr-2 mb-1 w-5 h-5" /> Hibernação e Estados de Energia</h2>
@@ -127,7 +127,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   ::   Wake Source Name: HID-compliant mouse
 
   :: Ver histórico de suspensões/ativações
-  powercfg /sleepstudy /output C:\Relatorios\sleepstudy.html`} />
+  powercfg /sleepstudy /output C:\\Relatorios\\sleepstudy.html`} />
 
         <h2><Clock className="inline-block mr-2 mb-1 w-5 h-5" /> Fast Startup e Wake-on-LAN</h2>
         <CodeBlock language="batch" title="Configurar inicialização rápida e WoL" code={`:: Verificar se Fast Startup (inicialização rápida) está ativo
@@ -135,16 +135,16 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: S4 listado = Fast Startup / Hibernação disponível
 
   :: Desativar Fast Startup via registro (para permitir dual boot correto)
-  reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f
+  reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f
 
   :: Reativar Fast Startup
-  reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f
+  reg add "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" /v HiberbootEnabled /t REG_DWORD /d 1 /f
 
   :: Configurar Wake-on-LAN via WMIC
   wmic nic where "name like '%Realtek%'" get PowerManagementCapabilities
 
   :: Listar configurações de energia de adaptadores de rede
-  powershell -Command "Get-NetAdapter | Select-Object Name, @{N='WakeOnLan';E={(Get-NetAdapterPowerManagement \$_).WakeOnMagicPacket}}"`} />
+  powershell -Command "Get-NetAdapter | Select-Object Name, @{N='WakeOnLan';E={(Get-NetAdapterPowerManagement \\$_).WakeOnMagicPacket}}"`} />
 
         <AlertBox type="info" title="Dica: Relatório de Energia">
           O <code>powercfg /energy</code> é a ferramenta mais poderosa para diagnosticar problemas de bateria, computador que não dorme, ou consumo excessivo de energia. O relatório HTML gerado classifica os problemas por severidade (Erros, Avisos, Informações).

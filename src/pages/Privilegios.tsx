@@ -19,39 +19,39 @@ import { PageContainer } from "@/components/layout/PageContainer";
         </AlertBox>
 
         <CodeBlock language="batch" title="Tomar posse de arquivos e pastas" code={`:: Tomar posse de um arquivo
-  takeown /f C:\arquivo-bloqueado.txt
+  takeown /f C:\\arquivo-bloqueado.txt
 
   :: Tomar posse de uma pasta inteira (recursivo)
-  takeown /f C:\PastaProtegida\ /r /d y
+  takeown /f C:\\PastaProtegida\\ /r /d y
   :: /r = recursivo, /d y = responde "sim" automaticamente
 
   :: Tomar posse e atribuir ao grupo Administradores
-  takeown /f C:\PastaProtegida\ /r /a /d y
+  takeown /f C:\\PastaProtegida\\ /r /a /d y
   :: /a = atribui ao grupo Administradores (não ao usuário atual)
 
   :: Tomar posse de arquivo de sistema do Windows
-  takeown /f C:\Windows\System32\arquivo.dll
+  takeown /f C:\\Windows\\System32\\arquivo.dll
 
   :: Depois de tomar posse, conceder permissão total de acesso
-  icacls C:\arquivo-bloqueado.txt /grant Administrators:F
-  icacls C:\PastaProtegida\ /grant Administrators:F /t
+  icacls C:\\arquivo-bloqueado.txt /grant Administrators:F
+  icacls C:\\PastaProtegida\\ /grant Administrators:F /t
   :: /t = recursivo em subpastas e arquivos
 
   :: Caso de uso: acessar arquivos da pasta Windows.old após upgrade
-  takeown /f C:\Windows.old\ /r /d y
-  icacls C:\Windows.old\ /grant Administrators:F /t`} />
+  takeown /f C:\\Windows.old\\ /r /d y
+  icacls C:\\Windows.old\\ /grant Administrators:F /t`} />
 
         <CodeBlock language="batch" title="Restaurar permissões originais" code={`:: Restaurar proprietário original (SYSTEM)
-  icacls C:\Windows\System32\arquivo.dll /setowner "NT AUTHORITY\SYSTEM"
+  icacls C:\\Windows\\System32\\arquivo.dll /setowner "NT AUTHORITY\\SYSTEM"
 
   :: Restaurar permissões padrão de arquivo de sistema
-  icacls C:\Windows\System32\arquivo.dll /reset
+  icacls C:\\Windows\\System32\\arquivo.dll /reset
 
   :: Ver proprietário atual de arquivos
-  icacls C:\PastaProtegida\ /c | findstr "owner:"
+  icacls C:\\PastaProtegida\\ /c | findstr "owner:"
 
   :: Restaurar permissões de toda a pasta Windows (perigoso!)
-  :: icacls C:\Windows /reset /t /c /q
+  :: icacls C:\\Windows /reset /t /c /q
   :: Só use isso se souber o que está fazendo`} />
 
         <h2><User className="inline-block mr-2 mb-1 w-5 h-5" /> RUNAS — Executar como Outro Usuário</h2>
@@ -61,10 +61,10 @@ import { PageContainer } from "@/components/layout/PageContainer";
   runas /user:Administrator cmd.exe
 
   :: Executar programa como usuário de domínio
-  runas /user:empresa\admin "C:\Ferramentas\admin-tool.exe"
+  runas /user:empresa\\admin "C:\\Ferramentas\\admin-tool.exe"
 
   :: Executar com usuário local
-  runas /user:joao "notepad.exe C:\config.ini"
+  runas /user:joao "notepad.exe C:\\config.ini"
 
   :: Executar sem carregar perfil do usuário (mais rápido)
   runas /user:admin /noprofile cmd.exe
@@ -135,7 +135,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h2><Settings className="inline-block mr-2 mb-1 w-5 h-5" /> Configurar UAC pelo CMD</h2>
         <CodeBlock language="batch" title="Gerenciar configurações do UAC" code={`:: Ver nível do UAC (0=desligado, 1=baixo, 2=médio, 3=alto)
-  reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v ConsentPromptBehaviorAdmin
+  reg query HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v ConsentPromptBehaviorAdmin
   :: Valores:
   :: 0 = Elevar sem prompt (sem UAC)
   :: 1 = Pedir credenciais na área de trabalho segura
@@ -143,16 +143,16 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: 5 = Pedir confirmação (padrão — somente para apps externos)
 
   :: Desativar UAC (NÃO RECOMENDADO - risco de segurança)
-  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+  reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 0 /f
 
   :: Reativar UAC
-  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+  reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v EnableLUA /t REG_DWORD /d 1 /f
 
   :: Configurar para nunca mostrar prompt de UAC (para admins)
-  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v ConsentPromptBehaviorAdmin /t REG_DWORD /d 0 /f
+  reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v ConsentPromptBehaviorAdmin /t REG_DWORD /d 0 /f
 
   :: Resetar UAC para padrão
-  reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v ConsentPromptBehaviorAdmin /t REG_DWORD /d 5 /f
+  reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System /v ConsentPromptBehaviorAdmin /t REG_DWORD /d 5 /f
 
   :: Requer reinicialização para efetivar`} />
 

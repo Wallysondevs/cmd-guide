@@ -54,13 +54,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   auditpol /set /category:"Object Access" /success:disable /failure:disable`} />
 
         <CodeBlock language="batch" title="Backup e restauração de políticas de auditoria" code={`:: Exportar política de auditoria para arquivo CSV
-  auditpol /backup /file:C:\Backup\auditpol-backup.csv
+  auditpol /backup /file:C:\\Backup\\auditpol-backup.csv
 
   :: Restaurar política de auditoria
-  auditpol /restore /file:C:\Backup\auditpol-backup.csv
+  auditpol /restore /file:C:\\Backup\\auditpol-backup.csv
 
   :: Exportar política de um domínio (requer permissões)
-  auditpol /get /category:* /r > C:\Relatorios\auditpol-relatorio.csv
+  auditpol /get /category:* /r > C:\\Relatorios\\auditpol-relatorio.csv
 
   :: Ver política de auditoria de recurso (arquivo/pasta)
   auditpol /get /subcategory:"File System"
@@ -101,7 +101,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
         <p>O <code>SECEDIT</code> permite analisar, configurar e exportar políticas de segurança do sistema local, incluindo políticas de senha, bloqueio de conta e privilégios de usuário.</p>
 
         <CodeBlock language="batch" title="Exportar e importar políticas de segurança" code={`:: Exportar configuração de segurança atual
-  secedit /export /cfg C:\Backup\seguranca.cfg /areas SECURITYPOLICY
+  secedit /export /cfg C:\\Backup\\seguranca.cfg /areas SECURITYPOLICY
 
   :: Áreas disponíveis:
   :: SECURITYPOLICY = Política de contas e auditoria
@@ -111,16 +111,16 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: SERVICES       = Configurações de serviço
 
   :: Importar/aplicar política de segurança
-  secedit /configure /db C:\Windows\Temp\secedit.sdb /cfg C:\Backup\seguranca.cfg /areas SECURITYPOLICY
+  secedit /configure /db C:\\Windows\\Temp\\secedit.sdb /cfg C:\\Backup\\seguranca.cfg /areas SECURITYPOLICY
 
   :: Analisar sistema contra uma baseline de segurança
-  secedit /analyze /db C:\Logs\secedit-analise.sdb /cfg C:\seguranca-baseline.cfg /log C:\Logs\secedit.log
+  secedit /analyze /db C:\\Logs\\secedit-analise.sdb /cfg C:\\seguranca-baseline.cfg /log C:\\Logs\\secedit.log
 
   :: Ver resultado da análise
-  secedit /export /db C:\Logs\secedit-analise.sdb /cfg C:\Logs\resultado-analise.cfg
+  secedit /export /db C:\\Logs\\secedit-analise.sdb /cfg C:\\Logs\\resultado-analise.cfg
 
   :: Restaurar política padrão do Windows
-  secedit /configure /db C:\Windows\Temp\secedit.sdb /cfg %windir%\inf\defltbase.inf /log C:\Logs\secedit-reset.log`} />
+  secedit /configure /db C:\\Windows\\Temp\\secedit.sdb /cfg %windir%\\inf\\defltbase.inf /log C:\\Logs\\secedit-reset.log`} />
 
         <h2><Lock className="inline-block mr-2 mb-1 w-5 h-5" /> Políticas de Senha e Bloqueio</h2>
         <CodeBlock language="batch" title="Configurar política de senhas" code={`:: Ver política de senhas atual
@@ -150,7 +150,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
         <h3>Script: Relatório de Segurança</h3>
         <CodeBlock language="batch" title="relatorio-seguranca.bat — Auditoria rápida" code={`@echo off
-  set LOG=C:\Relatorios\seguranca-%date:~6,4%%date:~3,2%%date:~0,2%.txt
+  set LOG=C:\\Relatorios\\seguranca-%date:~6,4%%date:~3,2%%date:~0,2%.txt
 
   echo ===== RELATÓRIO DE SEGURANÇA ===== > "%LOG%"
   echo Gerado em: %DATE% %TIME% >> "%LOG%"

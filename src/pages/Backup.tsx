@@ -25,14 +25,14 @@ import { PageContainer } from "@/components/layout/PageContainer";
   wbadmin start backup -backupTarget:D: -include:C: -allCritical -quiet
 
   :: Backup apenas de pastas específicas
-  wbadmin start backup -backupTarget:D: -include:C:\Dados,C:\Projetos -quiet
+  wbadmin start backup -backupTarget:D: -include:C:\\Dados,C:\\Projetos -quiet
 
   :: Backup do estado do sistema (System State)
   :: Inclui: registro, AD (se servidor), arquivos do boot, etc.
   wbadmin start systemstatebackup -backupTarget:D: -quiet
 
   :: Backup para compartilhamento de rede
-  wbadmin start backup -backupTarget:\\SERVIDOR\Backup -include:C: -allCritical -quiet -user:dominio\admin -password:senha
+  wbadmin start backup -backupTarget:\\SERVIDOR\\Backup -include:C: -allCritical -quiet -user:dominio\\admin -password:senha
 
   :: Listar backups existentes no destino
   wbadmin get versions -backupTarget:D:
@@ -41,10 +41,10 @@ import { PageContainer } from "@/components/layout/PageContainer";
   wbadmin get items -version:09/04/2026-10:00`} />
 
         <CodeBlock language="batch" title="Restaurar arquivos e volumes" code={`:: Restaurar arquivo específico
-  wbadmin start recovery -version:09/04/2026-10:00 -items:C:\Dados\relatorio.xlsx -itemtype:File -recoveryTarget:C:\Recuperados\ -quiet
+  wbadmin start recovery -version:09/04/2026-10:00 -items:C:\\Dados\\relatorio.xlsx -itemtype:File -recoveryTarget:C:\\Recuperados\\ -quiet
 
   :: Restaurar pasta inteira
-  wbadmin start recovery -version:09/04/2026-10:00 -items:C:\Dados -itemtype:File -recoveryTarget:D:\Recuperados -quiet
+  wbadmin start recovery -version:09/04/2026-10:00 -items:C:\\Dados -itemtype:File -recoveryTarget:D:\\Recuperados -quiet
 
   :: Restaurar volume completo (cuidado!)
   wbadmin start recovery -version:09/04/2026-10:00 -items:C: -itemtype:Volume -recoveryTarget:E: -quiet
@@ -71,14 +71,14 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: Criar shadow copy manualmente
   vssadmin create shadow /for=C:
   :: Saída:
-  :: Successfully created shadow copy for 'C:\'
+  :: Successfully created shadow copy for 'C:\\'
   ::     Shadow Copy ID: {12345678-abcd-1234-abcd-123456789012}
-  ::     Shadow Copy Volume Name: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+  ::     Shadow Copy Volume Name: \\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1
 
   :: Montar shadow copy para navegar nela
-  :: Substitua o \\?\ pelo nome retornado acima:
-  mklink /d C:\ShadowMount \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\
-  :: Agora acesse C:\ShadowMount como se fosse o snapshot do C:
+  :: Substitua o \\?\\ pelo nome retornado acima:
+  mklink /d C:\\ShadowMount \\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\
+  :: Agora acesse C:\\ShadowMount como se fosse o snapshot do C:
 
   :: Deletar shadow copies antigas
   vssadmin delete shadows /for=C: /oldest   :: Delete a mais antiga
@@ -125,8 +125,8 @@ import { PageContainer } from "@/components/layout/PageContainer";
   setlocal
 
   :: Configurações
-  set DESTINO=D:\Backups
-  set LOG=D:\Logs\backup.log
+  set DESTINO=D:\\Backups
+  set LOG=D:\\Logs\\backup.log
   set MANTER_DIAS=30
 
   :: Timestamp
@@ -152,8 +152,8 @@ import { PageContainer } from "@/components/layout/PageContainer";
         <h2><Shield className="inline-block mr-2 mb-1 w-5 h-5" /> Recuperação de Arquivos via Versões Anteriores</h2>
         <CodeBlock language="batch" title="Acessar versões anteriores de arquivos" code={`:: Listar versões anteriores de uma pasta (via PowerShell)
   powershell -Command "
-      (Get-Item 'C:\Dados').PSPath | Get-Item | 
-      % { (Get-ItemProperty \$_.PSPath).PSChildName }
+      (Get-Item 'C:\\Dados').PSPath | Get-Item | 
+      % { (Get-ItemProperty \\$_.PSPath).PSChildName }
   "
 
   :: Via interface gráfica: clique direito na pasta → Restaurar versões anteriores
@@ -162,8 +162,8 @@ import { PageContainer } from "@/components/layout/PageContainer";
   vssadmin list shadows /for=C: | findstr "Shadow Copy Volume"
 
   :: Script para listar todos os arquivos numa shadow copy
-  set SC_PATH=\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
-  dir "%SC_PATH%\Users\Joao\Documentos\" /s /b 2>nul`} />
+  set SC_PATH=\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1
+  dir "%SC_PATH%\\Users\\Joao\\Documentos\\" /s /b 2>nul`} />
 
         <AlertBox type="warning" title="Ransomware e Shadow Copies">
           Ransomwares geralmente executam <code>vssadmin delete shadows /all</code> logo após a infecção para impedir a recuperação. Mantenha backups externos (offsite) e desconectados da rede. O backup externo é a única proteção garantida contra ransomware.

@@ -28,7 +28,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   certutil -hashfile arquivo.zip SHA512
 
   :: Comparar hash com valor esperado (script automático)
-  set ARQUIVO=C:\Downloads\programa.exe
+  set ARQUIVO=C:\\Downloads\\programa.exe
   set ESPERADO=a4b1c2d3...
 
   for /f "skip=1 tokens=*" %%h in ('certutil -hashfile "%ARQUIVO%" SHA256') do (
@@ -97,7 +97,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   :: Depois usar MMC ou PowerShell para exportar com chave
 
   :: Exportar via PowerShell integrado
-  powershell -Command "Get-ChildItem Cert:\CurrentUser\My | Export-Certificate -FilePath cert.cer -Type CERT"
+  powershell -Command "Get-ChildItem Cert:\\CurrentUser\\My | Export-Certificate -FilePath cert.cer -Type CERT"
 
   :: Remover certificado do repositório
   certutil -delstore My "thumb-print-do-certificado"`} />
@@ -108,13 +108,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
 
   :: Verificar cadeia de certificados de um site
   powershell -Command "& {
-      \$req = [System.Net.WebRequest]::Create('https://meusite.com.br')
-      \$req.GetResponse() | Out-Null
-      \$cert = \$req.ServicePoint.Certificate
-      Write-Host 'Assunto:' \$cert.Subject
-      Write-Host 'Emissor:' \$cert.Issuer
-      Write-Host 'Valido até:' \$cert.GetExpirationDateString()
-      Write-Host 'Thumbprint:' \$cert.GetCertHashString()
+      \\$req = [System.Net.WebRequest]::Create('https://meusite.com.br')
+      \\$req.GetResponse() | Out-Null
+      \\$cert = \\$req.ServicePoint.Certificate
+      Write-Host 'Assunto:' \\$cert.Subject
+      Write-Host 'Emissor:' \\$cert.Issuer
+      Write-Host 'Valido até:' \\$cert.GetExpirationDateString()
+      Write-Host 'Thumbprint:' \\$cert.GetCertHashString()
   }"
 
   :: Verificar certificado local (arquivo .cer)
@@ -173,13 +173,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   echo.
 
   powershell -Command "
-      \$limite = (Get-Date).AddDays(30)
-      Get-ChildItem Cert:\LocalMachine\My | Where-Object {
-          \$_.NotAfter -lt \$limite -and \$_.NotAfter -gt (Get-Date)
+      \\$limite = (Get-Date).AddDays(30)
+      Get-ChildItem Cert:\\LocalMachine\\My | Where-Object {
+          \\$_.NotAfter -lt \\$limite -and \\$_.NotAfter -gt (Get-Date)
       } | ForEach-Object {
-          Write-Host 'EXPIRANDO: ' \$_.Subject
-          Write-Host '  Válido até: ' \$_.NotAfter
-          Write-Host '  Thumbprint: ' \$_.Thumbprint
+          Write-Host 'EXPIRANDO: ' \\$_.Subject
+          Write-Host '  Válido até: ' \\$_.NotAfter
+          Write-Host '  Thumbprint: ' \\$_.Thumbprint
           Write-Host ''
       }
   "

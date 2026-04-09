@@ -35,10 +35,10 @@ import { PageContainer } from "@/components/layout/PageContainer";
   netsh interface ip set dns "Ethernet" dhcp
 
   :: Exportar toda a configuração de rede para arquivo
-  netsh -c interface dump > C:\Backup\rede-config.txt
+  netsh -c interface dump > C:\\Backup\\rede-config.txt
 
   :: Importar configuração salva
-  netsh -f C:\Backup\rede-config.txt`} />
+  netsh -f C:\\Backup\\rede-config.txt`} />
 
         <h2><Wifi className="inline-block mr-2 mb-1 w-5 h-5" /> NETSH WLAN — Gerenciamento WiFi</h2>
         <p>O <code>netsh wlan</code> permite gerenciar conexões WiFi completamente: listar redes, conectar, desconectar, ver senhas salvas e criar hotspots.</p>
@@ -84,13 +84,13 @@ import { PageContainer } from "@/components/layout/PageContainer";
   pause`} />
 
         <CodeBlock language="batch" title="Exportar e importar perfis WiFi" code={`:: Exportar perfil WiFi (sem senha - XML)
-  netsh wlan export profile name="MinhaRede" folder=C:\WiFiBackup\
+  netsh wlan export profile name="MinhaRede" folder=C:\\WiFiBackup\\
 
   :: Exportar com senha (requer admin)
-  netsh wlan export profile name="MinhaRede" key=clear folder=C:\WiFiBackup\
+  netsh wlan export profile name="MinhaRede" key=clear folder=C:\\WiFiBackup\\
 
   :: Importar perfil WiFi em outro computador
-  netsh wlan add profile filename="C:\WiFiBackup\Wi-Fi-MinhaRede.xml"
+  netsh wlan add profile filename="C:\\WiFiBackup\\Wi-Fi-MinhaRede.xml"
 
   :: Criar hotspot WiFi (ponto de acesso)
   :: 1. Verificar suporte
@@ -122,11 +122,11 @@ import { PageContainer } from "@/components/layout/PageContainer";
   netsh winhttp reset proxy
 
   :: Configurar proxy via registro (para todos os usuários)
-  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
-  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.empresa.com:8080" /f
+  reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
+  reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.empresa.com:8080" /f
 
   :: Desativar proxy
-  reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f`} />
+  reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f`} />
 
         <h2><Shield className="inline-block mr-2 mb-1 w-5 h-5" /> NETSH WFAS — Firewall Avançado</h2>
         <CodeBlock language="batch" title="Gerenciar firewall avançado com NETSH" code={`:: Ver estado do firewall
@@ -203,7 +203,7 @@ import { PageContainer } from "@/components/layout/PageContainer";
   netstat -an | findstr LISTENING
   echo.
 
-  echo Relatório salvo em: C:\Logs\diag-rede.txt
+  echo Relatório salvo em: C:\\Logs\\diag-rede.txt
   pause`} />
 
         <AlertBox type="info" title="NETSH vs PowerShell">
