@@ -1,155 +1,192 @@
 import { PageContainer } from "@/components/layout/PageContainer";
-import { CodeBlock } from "@/components/ui/CodeBlock";
-import { AlertBox } from "@/components/ui/AlertBox";
-import { Users, Building, Search, Shield } from "lucide-react";
+  import { CodeBlock } from "@/components/ui/CodeBlock";
+  import { AlertBox } from "@/components/ui/AlertBox";
+  import { Building, Users, Search, Settings, Shield, Database } from "lucide-react";
 
-export default function ActiveDirectory() {
-  return (
-    <PageContainer
-      title="Active Directory pelo CMD"
-      subtitle="Gerencie usuários, grupos e objetos do Active Directory com comandos NET, DSADD, DSQUERY e DSMOD."
-      difficulty="avancado"
-      timeToRead="35 min"
-    >
-      <h2><Users className="inline-block mr-2 mb-1 w-5 h-5" /> Gerenciar Usuários com NET USER</h2>
-      <p>O comando <code>NET USER</code> permite criar, modificar e excluir contas de usuário locais e de domínio.</p>
+  export default function ActiveDirectory() {
+    return (
+      <PageContainer
+        title="Active Directory pelo CMD"
+        subtitle="Gerencie usuários, grupos, computadores e políticas do AD com DSQUERY, DSMOD, DSADD, DSRM e NET USE."
+        difficulty="avancado"
+        timeToRead="50 min"
+      >
+        <AlertBox type="warning" title="Requisitos">
+          Os comandos DS* (DSQUERY, DSMOD, DSADD, DSRM) exigem as Ferramentas de Administração do Active Directory instaladas (RSAT). Execute o CMD em uma conta com privilégios de administrador de domínio.
+        </AlertBox>
 
-      <CodeBlock language="batch" title="Operações com usuários" code={`:: Listar usuários locais
-net user
+        <h2><Search className="inline-block mr-2 mb-1 w-5 h-5" /> DSQUERY — Buscar Objetos no AD</h2>
+        <p>O <code>DSQUERY</code> busca objetos no Active Directory (usuários, grupos, computadores, OUs) usando filtros. A saída são DNs (Distinguished Names) que podem ser passados para outros comandos DS*.</p>
 
-:: Listar usuários do domínio
-net user /domain
+        <CodeBlock language="batch" title="Buscar usuários no AD" code={`:: Buscar usuário pelo nome
+  dsquery user -name "João*"
+  :: Saída: "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br"
 
-:: Ver detalhes de um usuário
-net user joaosilva /domain
+  :: Buscar usuário pelo login (samAccountName)
+  dsquery user -samid jsilva
 
-:: Criar usuário local
-net user novousuario Senha@123 /add
+  :: Buscar por conta desabilitada
+  dsquery user -disabled
 
-:: Criar usuário de domínio
-net user novousuario Senha@123 /add /domain
+  :: Buscar por último logon (nunca logou)
+  dsquery user -inactive 4  :: Inativo há 4+ semanas
 
-:: Definir configurações do usuário
-net user joaosilva /expires:31/12/2025 /domain
-net user joaosilva /passwordreq:yes /domain
-net user joaosilva /active:yes /domain
+  :: Buscar usuários que não alteraram senha em 90+ dias
+  dsquery user -stalepwd 90
 
-:: Forçar troca de senha no próximo login
-net user joaosilva /logonpasswordchg:yes /domain
+  :: Buscar todos os usuários de uma OU
+  dsquery user "OU=Financeiro,DC=empresa,DC=com,DC=br"
 
-:: Desativar conta
-net user joaosilva /active:no /domain
+  :: Buscar usuários com filtro LDAP avançado
+  dsquery * -filter "(&(objectClass=user)(department=TI))" -attr cn mail telephoneNumber
 
-:: Excluir usuário
-net user joaosilva /delete /domain`} />
+  :: Buscar e limitar resultados
+  dsquery user -name "*silva*" -limit 50`} />
 
-      <h2><Building className="inline-block mr-2 mb-1 w-5 h-5" /> Gerenciar Grupos</h2>
-      <CodeBlock language="batch" title="Grupos locais e de domínio" code={`:: Listar grupos locais
-net localgroup
+        <CodeBlock language="batch" title="Buscar grupos, computadores e OUs" code={`:: Buscar grupo pelo nome
+  dsquery group -name "Admins*"
 
-:: Listar grupos do domínio
-net group /domain
+  :: Listar membros de um grupo
+  dsget group "CN=Admins TI,OU=Grupos,DC=empresa,DC=com,DC=br" -members
 
-:: Ver membros de um grupo
-net localgroup "Administradores"
-net group "Domain Admins\" /domain
+  :: Listar grupos de um usuário
+  dsget user "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br" -memberof
 
-:: Criar grupo local
-net localgroup "Desenvolvedores\" /add
+  :: Buscar computadores no AD
+  dsquery computer -name "PC-*"
+  dsquery computer -inactive 4   :: Computadores inativos há 4+ semanas
+  dsquery computer -o rdn        :: Apenas o nome, sem DN completo
 
-:: Adicionar usuário ao grupo
-net localgroup "Administradores" joaosilva /add
-net group "Domain Admins" joaosilva /add /domain
+  :: Buscar todas as OUs
+  dsquery ou "DC=empresa,DC=com,DC=br"
 
-:: Remover usuário do grupo
-net localgroup "Administradores" joaosilva /delete
+  :: Buscar controladores de domínio
+  dsquery server -domain empresa.com.br -forest`} />
 
-:: Excluir grupo
-net localgroup "Desenvolvedores\" /delete`} />
+        <h2><Users className="inline-block mr-2 mb-1 w-5 h-5" /> DSADD — Criar Objetos no AD</h2>
+        <CodeBlock language="batch" title="Criar usuários, grupos e OUs" code={`:: Criar usuário
+  dsadd user "CN=Maria Santos,OU=RH,DC=empresa,DC=com,DC=br" ^
+      -samid msantos ^
+      -upn msantos@empresa.com.br ^
+      -fn Maria ^
+      -ln Santos ^
+      -display "Maria Santos" ^
+      -dept "Recursos Humanos" ^
+      -title "Analista" ^
+      -email msantos@empresa.com.br ^
+      -pwd "Senha@2026!" ^
+      -mustchpwd yes ^
+      -disabled no
 
-      <h2><Search className="inline-block mr-2 mb-1 w-5 h-5" /> DSQUERY — Consultar o Active Directory</h2>
-      <p>O <code>DSQUERY</code> permite fazer buscas avançadas no Active Directory a partir do CMD.</p>
+  :: Criar grupo de segurança
+  dsadd group "CN=GRP-Financeiro,OU=Grupos,DC=empresa,DC=com,DC=br" ^
+      -samid GRP-Financeiro ^
+      -grouptype -2147483646 ^
+      -desc "Grupo de acesso do departamento Financeiro"
 
-      <CodeBlock language="batch" title="Buscar objetos no AD" code={`:: Buscar usuários pelo nome
-dsquery user -name "João*\"
+  :: Criar OU
+  dsadd ou "OU=Filial-SP,OU=Escritorios,DC=empresa,DC=com,DC=br" ^
+      -desc "Escritório de São Paulo"
 
-:: Buscar usuários em uma OU específica
-dsquery user "OU=TI,DC=empresa,DC=com\"
+  :: Criar computador no AD
+  dsadd computer "CN=PC-001,OU=Workstations,DC=empresa,DC=com,DC=br" ^
+      -desc "Computador sala 101"`} />
 
-:: Buscar contas desativadas
-dsquery user -disabled
+        <h2><Settings className="inline-block mr-2 mb-1 w-5 h-5" /> DSMOD — Modificar Objetos no AD</h2>
+        <CodeBlock language="batch" title="Modificar atributos de usuários e grupos" code={`:: Desabilitar usuário
+  dsmod user "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br" -disabled yes
 
-:: Buscar contas inativas (sem login há 30 dias)
-dsquery user -inactive 4
+  :: Habilitar usuário
+  dsmod user "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br" -disabled no
 
-:: Buscar grupos
-dsquery group -name "Dev*\"
+  :: Resetar senha (forçar troca no próximo login)
+  dsmod user "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br" -pwd "NovaSenha@2026!" -mustchpwd yes
 
-:: Buscar computadores
-dsquery computer -name "WS*\"
+  :: Atualizar atributos do usuário
+  dsmod user "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br" ^
+      -title "Gerente de TI" ^
+      -dept "TI" ^
+      -tel "+55 11 9999-8888"
 
-:: Buscar OUs
-dsquery ou -name "TI\"
+  :: Adicionar usuário a um grupo
+  dsmod group "CN=GRP-Admins,OU=Grupos,DC=empresa,DC=com,DC=br" -addmbr "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br"
 
-:: Buscar por atributo específico (filtro LDAP)
-dsquery * -filter "(&(objectClass=user)(department=TI))\" -attr cn mail`} />
+  :: Remover usuário de um grupo
+  dsmod group "CN=GRP-Admins,OU=Grupos,DC=empresa,DC=com,DC=br" -rmmbr "CN=João Silva,OU=TI,DC=empresa,DC=com,DC=br"
 
-      <h2><Shield className="inline-block mr-2 mb-1 w-5 h-5" /> DSADD, DSMOD, DSMOVE e DSRM</h2>
-      <CodeBlock language="batch" title="Criar objetos no AD (DSADD)" code={`:: Criar usuário no AD
-dsadd user "CN=Maria Santos,OU=RH,DC=empresa,DC=com\" -samid mariasantos -upn mariasantos@empresa.com -pwd Senha@123 -pwdneverexpires yes -disabled no
+  :: Modificar múltiplos usuários via pipeline
+  dsquery user -disabled | dsmod user -disabled no`} />
 
-:: Criar grupo
-dsadd group "CN=Desenvolvedores,OU=TI,DC=empresa,DC=com\" -samid desenvolvedores -scope g -secgrp yes
+        <h2><Shield className="inline-block mr-2 mb-1 w-5 h-5" /> Comandos NET para AD</h2>
+        <CodeBlock language="batch" title="NET USER, NET GROUP e NET LOCALGROUP" code={`:: Criar usuário local ou de domínio
+  net user novouser Senha@2026! /add /domain
 
-:: Criar OU
-dsadd ou "OU=Marketing,DC=empresa,DC=com\" -desc \"Departamento de Marketing\"`} />
+  :: Ver informações de usuário no domínio
+  net user jsilva /domain
+  :: Mostra: grupos, última troca de senha, conta bloqueada, etc.
 
-      <CodeBlock language="batch" title="Modificar objetos no AD (DSMOD)" code={`:: Alterar descrição de usuário
-dsmod user "CN=Joao Silva,OU=TI,DC=empresa,DC=com\" -desc \"Analista de Sistemas Senior\"
+  :: Definir expiração de senha
+  net user jsilva /expires:31/12/2026 /domain
 
-:: Redefinir senha
-dsmod user "CN=Joao Silva,OU=TI,DC=empresa,DC=com\" -pwd NovaSenha@456 -mustchpwd yes
+  :: Adicionar usuário a grupo do domínio
+  net group "Administradores de Domínio" jsilva /add /domain
 
-:: Desativar conta
-dsmod user "CN=Joao Silva,OU=TI,DC=empresa,DC=com\" -disabled yes
+  :: Listar membros de um grupo
+  net group "Usuários do Domínio" /domain
 
-:: Adicionar usuário a um grupo
-dsmod group "CN=Admins,OU=TI,DC=empresa,DC=com\" -addmbr \"CN=Joao Silva,OU=TI,DC=empresa,DC=com\"`} />
+  :: Listar todos os grupos do domínio
+  net group /domain
 
-      <CodeBlock language="batch" title="Mover e excluir objetos" code={`:: Mover usuário para outra OU
-dsmove "CN=Joao Silva,OU=TI,DC=empresa,DC=com\" -newparent \"OU=Gerencia,DC=empresa,DC=com\"
+  :: Verificar contas bloqueadas (via NET)
+  net accounts /domain
 
-:: Excluir objeto do AD
-dsrm "CN=Joao Silva,OU=TI,DC=empresa,DC=com\" -noprompt
+  :: Desbloquear conta (via PowerShell)
+  powershell -Command "Unlock-ADAccount -Identity jsilva"
 
-:: Excluir OU e tudo dentro dela
-dsrm "OU=Temporarios,DC=empresa,DC=com\" -subtree -noprompt`} />
+  :: Resetar senha via PowerShell (mais robusto)
+  powershell -Command "Set-ADAccountPassword -Identity jsilva -NewPassword (ConvertTo-SecureString 'NovaSenha@2026!' -AsPlainText -Force) -Reset"`} />
 
-      <h3>Script: Criar Usuários em Massa</h3>
-      <CodeBlock language="batch" title="criar-usuarios.bat" code={`@echo off
-:: Ler lista de usuarios de um CSV: nome,login,senha,ou
-:: Formato do arquivo usuarios.txt: joao,joaosilva,Senha@123,TI
+        <h2><Database className="inline-block mr-2 mb-1 w-5 h-5" /> Scripts de Automação AD</h2>
 
-for /f "tokens=1,2,3,4 delims=,\" %%a in (usuarios.txt) do (
-    echo Criando usuario: %%b
-    dsadd user "CN=%%a,OU=%%d,DC=empresa,DC=com\" ^
-        -samid %%b ^
-        -upn %%b@empresa.com ^
-        -pwd %%c ^
-        -mustchpwd yes ^
-        -disabled no ^
-        -fn %%a
-    if errorlevel 1 (
-        echo ERRO ao criar: %%b
-    ) else (
-        echo Criado: %%b
-    )
-)
-echo Processo concluido!`} />
+        <h3>Script: Criar múltiplos usuários a partir de CSV</h3>
+        <CodeBlock language="batch" title="criar-usuarios-csv.bat" code={`@echo off
+  :: Formato do CSV: nome,sobrenome,login,email,ou,senha
+  :: Arquivo: usuarios.csv
 
-      <AlertBox type="info" title="Requer RSAT ou DC">
-        Os comandos DS* (dsquery, dsadd, dsmod etc.) precisam das ferramentas RSAT (Remote Server Administration Tools) instaladas, ou devem ser executados diretamente em um Domain Controller.
-      </AlertBox>
-    </PageContainer>
-  );
-}
+  echo Criando usuários do arquivo CSV...
+  echo.
+
+  for /f "skip=1 tokens=1,2,3,4,5,6 delims=," %%a in (usuarios.csv) do (
+      echo Criando: %%c (%%a %%b)
+      dsadd user "CN=%%a %%b,%%e,DC=empresa,DC=com,DC=br" ^
+          -samid %%c ^
+          -upn %%c@empresa.com.br ^
+          -fn %%a -ln %%b ^
+          -display "%%a %%b" ^
+          -email %%d ^
+          -pwd %%f ^
+          -mustchpwd yes ^
+          -disabled no
+      echo   Resultado: %ERRORLEVEL%
+  )
+
+  echo.
+  echo Processo concluído!
+  pause`} />
+
+        <h3>Script: Relatório de Contas Inativas</h3>
+        <CodeBlock language="batch" title="relatorio-inativos.bat" code={`@echo off
+  echo Usuários inativos há 30+ dias:
+  echo.
+  dsquery user -inactive 4 -limit 1000 | dsget user -samid -disabled -l
+  echo.
+  echo Computadores inativos há 60+ dias:
+  dsquery computer -inactive 9 -limit 500 | dsget computer -samid -desc -l
+  pause`} />
+
+        <AlertBox type="info" title="RSAT — Ferramentas de Administração Remota">
+          Instale o RSAT no Windows 10/11: Configurações → Recursos Opcionais → Ferramentas de Administração do Active Directory. Ou via CMD: <code>DISM /Online /Add-Capability /CapabilityName:Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0</code>
+        </AlertBox>
+      </PageContainer>
+    );
+  }
